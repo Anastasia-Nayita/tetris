@@ -1,0 +1,48 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    text-align: center;
+}
+.container {
+    display: flex;
+    position: absolute;
+    left: 35%;
+    top: 10%;
+}
+.grid {
+    width: 200px;
+    height: 400px;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: lightgrey;
+    /* border: solid 1px; */
+}
+
+.grid div {
+    height: 20px;
+    width: 20px;
+}
+
+.tetrmino {
+    background-color: blueviolet;
+    border: solid thin black;
+    box-shadow: inset -2px -2px 4px 1px #060505d4,
+        inset 2px 2px 4px 1px #ffffffbf,
+        8px 14px 6px -10px rgb(245 247 235 / 11%);
+}
+
+.mini-grid {
+    margin: 5rem;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    /* background-color: darkcyan; */
+    /* border: darkblue solid; */
+}
+.mini-grid div {
+    height: 20px;
+    width: 20px;
+    border: lightgrey 0.5px solid;
+}
