@@ -11,8 +11,8 @@
     top: 10%;
 }
 .grid {
-    width: 200px;
-    height: 400px;
+    width: 400px;
+    height: 600px;
     display: flex;
     flex-wrap: wrap;
     background-color: lightgrey;
@@ -20,8 +20,8 @@
 }
 
 .grid div {
-    height: 20px;
-    width: 20px;
+    height: 25px;
+    width: 25px;
 }
 
 .tetrmino {

@@ -1,7 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
     const grid = document.querySelector(".grid");
+    for (var i = 0; i < 384; i++) {
+        grid.innerHTML += "<div></div>";
+    }
+    for (var j = 0; j < 16; j++) {
+        grid.innerHTML += '<div class="taken"></div>';
+    }
     let squares = Array.from(document.querySelectorAll(".grid div"));
-    const width = 10;
+
+    const width = 16;
     let nextRandom = 0;
     let score = 0;
     const colors = ["orange", "hotpink", "green", "purple", "red"];
@@ -53,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
         iTetrmino,
     ];
 
-    let currentPosition = 4;
+    let currentPosition = 8;
     let currentRotation = 0;
     let random = Math.floor(Math.random() * allTetrminoes.length);
     let current = allTetrminoes[random][currentRotation];
@@ -76,26 +83,28 @@ document.addEventListener("DOMContentLoaded", () => {
     // timerId = setInterval(moveDown, 250);
 
     function control(e) {
-        if (e.keyCode === 37) {
-            moveLeft();
-        }
-        if (e.keyCode === 39) {
-            moveRight();
-        }
-        if (e.keyCode === 38) {
-            rotate();
-        }
-        if (e.keyCode === 40) {
-            moveDown();
+        if (timerId) {
+            if (e.keyCode === 37) {
+                moveLeft();
+            }
+            if (e.keyCode === 39) {
+                moveRight();
+            }
+            if (e.keyCode === 38) {
+                rotate();
+            }
+            if (e.keyCode === 40) {
+                moveDown();
+            }
         }
     }
     document.addEventListener("keydown", control);
 
     function moveDown() {
+        freeze();
         undraw();
         currentPosition += width;
         draw();
-        freeze();
     }
 
     function freeze() {
@@ -112,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
             random = nextRandom;
             nextRandom = Math.floor(Math.random() * allTetrminoes.length);
             current = allTetrminoes[random][currentRotation];
-            currentPosition = 4;
+            currentPosition = 8;
 
             draw();
             displayShape();
@@ -123,10 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function moveLeft() {
         undraw();
-        const isAtLeftEdge = current.some(
-            (index) => (currentPosition + index) % width === 0
-        );
-        if (!isAtLeftEdge) currentPosition -= 1;
+        if (!isAtLeftEdge()) currentPosition -= 1;
         if (
             current.some((index) =>
                 squares[currentPosition + index].classList.contains("taken")
@@ -139,10 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function moveRight() {
         undraw();
-        const isAtRightEdge = current.some(
-            (index) => (currentPosition + index) % width === width - 1
-        );
-        if (!isAtRightEdge) currentPosition += 1;
+        if (!isAtRightEdge()) currentPosition += 1;
         if (
             current.some((index) =>
                 squares[currentPosition + index].classList.contains("taken")
@@ -153,7 +156,31 @@ document.addEventListener("DOMContentLoaded", () => {
         draw();
     }
 
+    function isAtRightEdge() {
+        return current.some(
+            (index) => (currentPosition + index) % width === width - 1
+        );
+    }
+    function isAtLeftEdge() {
+        return current.some((index) => (currentPosition + index) % width === 0);
+    }
+
     ///// rotation
+
+    function rotationCheck(P) {
+        P = P || currentPosition;
+        if ((P + 1) % width < 8) {
+            if (isAtRightEdge()) {
+                currentPosition += 1;
+                rotationCheck(P);
+            }
+        } else if (P % width > 9) {
+            if (isAtLeftEdge()) {
+                currentPosition -= 1;
+                rotationCheck(P);
+            }
+        }
+    }
 
     function rotate() {
         undraw();
@@ -162,6 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
             currentRotation = 0;
         }
         current = allTetrminoes[random][currentRotation];
+        rotationCheck();
         draw();
     }
 
@@ -218,7 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /// add score
     function addScore() {
-        for (let i = 0; i < 199; i += width) {
+        for (let i = 0; i < 384; i += width) {
             const row = [
                 i,
                 i + 1,
@@ -230,6 +258,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 i + 7,
                 i + 8,
                 i + 9,
+                i + 10,
+                i + 11,
+                i + 12,
+                i + 13,
+                i + 14,
+                i + 15,
             ];
 
             if (
