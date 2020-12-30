@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const scoreDisplay = document.querySelector("#score");
     const startBtn = document.querySelector("#start-btn");
     const reloadBtn = document.querySelector("#reload");
+    const caterpillarBtn = document.querySelector("#caterpillar");
+    caterpillarBtn.classList.add("hidden");
     let timerId;
 
     const lTetrmino = [
@@ -244,6 +246,8 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.reload();
     });
 
+    caterpillarBtn.addEventListener("click", () => {});
+
     /// add score
     function addScore() {
         for (let i = 0; i < 384; i += width) {
@@ -280,6 +284,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 //console.log("squaresRemoved ", squaresRemoved);
                 squares = squaresRemoved.concat(squares);
                 squares.forEach((cell) => grid.appendChild(cell));
+            }
+
+            if (score >= 10) {
+                caterpillarBtn.classList.remove("hidden");
             }
         }
     }

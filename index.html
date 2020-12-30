@@ -5,12 +5,16 @@
         <script src="app.js"></script>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <title>Tetris</title>
+        <video playsinline autoplay muted loop id="bgvid">
+            <source src="bgc.mp4" type="video/mp4" />
+        </video>
     </head>
     <body>
-        <h3>Score: <span id="score">0</span></h3>
+        <h3 class="score">SCORE: <span id="score">0</span></h3>
         <button id="start-btn">Start/Pause</button>
         <button id="reload">Play again</button>
+        <button id="caterpillar">🐛</button>
         <div class="container">
             <div class="grid"></div>
             <div class="mini-grid">
