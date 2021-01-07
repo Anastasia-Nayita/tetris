@@ -32,7 +32,9 @@ video {
     background-color: #d3d3d366;
     /* border: solid 1px; */
 }
-
+button {
+    height: 2rem;
+}
 .hidden {
     display: none;
 }
@@ -42,7 +44,7 @@ video {
 }
 
 .tetrmino {
-    background-color: blueviolet;
+    /* background-color: blueviolet; */
     border: outset thin #1b1b1b;
     box-shadow: inset -2px -2px 4px 1px #060505d4,
         inset 2px 2px 4px 1px #ffffffbf,

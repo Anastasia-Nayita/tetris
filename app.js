@@ -9,9 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let squares = Array.from(document.querySelectorAll(".grid div"));
 
     const width = 16;
-    let nextRandom = 0;
+    let nextRandomShape = 0;
+    let nextRandomColor;
     let score = 0;
-    const colors = ["orange", "hotpink", "green", "purple", "red"];
     const scoreDisplay = document.querySelector("#score");
     const startBtn = document.querySelector("#start-btn");
     const reloadBtn = document.querySelector("#reload");
@@ -64,15 +64,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let currentPosition = 8;
     let currentRotation = 0;
-    let random = Math.floor(Math.random() * allTetrminoes.length);
-    let current = allTetrminoes[random][currentRotation];
+    let randomShape = Math.floor(Math.random() * allTetrminoes.length);
+    let randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+
+    let current = allTetrminoes[randomShape][currentRotation];
 
     function draw() {
         current.forEach((index) => {
             squares[currentPosition + index].classList.add("tetrmino");
-            squares[currentPosition + index].style.backgroundColor =
-                colors[random];
+
+            squares[
+                currentPosition + index
+            ].style.backgroundColor = randomColor;
         });
+        if (score >= 10) {
+            caterpillarBtn.classList.remove("hidden");
+        } else {
+            caterpillarBtn.classList.add("hidden");
+        }
     }
 
     function undraw() {
@@ -81,8 +90,6 @@ document.addEventListener("DOMContentLoaded", () => {
             squares[currentPosition + index].style.backgroundColor = "";
         });
     }
-
-    // timerId = setInterval(moveDown, 250);
 
     function control(e) {
         if (timerId) {
@@ -120,14 +127,17 @@ document.addEventListener("DOMContentLoaded", () => {
             current.forEach((index) =>
                 squares[currentPosition + index].classList.add("taken")
             );
-            random = nextRandom;
-            nextRandom = Math.floor(Math.random() * allTetrminoes.length);
-            current = allTetrminoes[random][currentRotation];
+            randomShape = nextRandomShape;
+            randomColor = nextRandomColor;
+            nextRandomShape = Math.floor(Math.random() * allTetrminoes.length);
+            nextRandomColor =
+                "#" + Math.floor(Math.random() * 16777215).toString(16);
+            current = allTetrminoes[randomShape][currentRotation];
             currentPosition = 8;
 
             draw();
             displayShape();
-            addScore();
+            addScore("check");
             gameOver();
         }
     }
@@ -190,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (currentRotation === current.length) {
             currentRotation = 0;
         }
-        current = allTetrminoes[random][currentRotation];
+        current = allTetrminoes[randomShape][currentRotation];
         rotationCheck();
         draw();
     }
@@ -222,10 +232,12 @@ document.addEventListener("DOMContentLoaded", () => {
             square.classList.remove("tetrmino");
             square.style.background = "";
         });
-        upNextTetriminoes[nextRandom].forEach((index) => {
+
+        upNextTetriminoes[nextRandomShape].forEach((index) => {
             displaySquares[displayIndex + index].classList.add("tetrmino");
-            displaySquares[displayIndex + index].style.backgroundColor =
-                colors[nextRandom];
+            displaySquares[
+                displayIndex + index
+            ].style.backgroundColor = nextRandomColor;
         });
     }
 
@@ -237,7 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             draw();
             timerId = setInterval(moveDown, 250);
-            nextRandom = Math.floor(Math.random() * allTetrminoes.length);
+            nextRandomShape = Math.floor(Math.random() * allTetrminoes.length);
             displayShape();
         }
     });
@@ -246,34 +258,71 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.reload();
     });
 
-    caterpillarBtn.addEventListener("click", () => {});
+    caterpillarBtn.addEventListener("click", () => {
+        addScore("caterpillar");
+    });
 
     /// add score
-    function addScore() {
-        for (let i = 0; i < 384; i += width) {
-            const row = [
-                i,
-                i + 1,
-                i + 2,
-                i + 3,
-                i + 4,
-                i + 5,
-                i + 6,
-                i + 7,
-                i + 8,
-                i + 9,
-                i + 10,
-                i + 11,
-                i + 12,
-                i + 13,
-                i + 14,
-                i + 15,
-            ];
+    function addScore(arg) {
+        if (arg === "check") {
+            for (let i = 0; i < 384; i += width) {
+                const row = [
+                    i,
+                    i + 1,
+                    i + 2,
+                    i + 3,
+                    i + 4,
+                    i + 5,
+                    i + 6,
+                    i + 7,
+                    i + 8,
+                    i + 9,
+                    i + 10,
+                    i + 11,
+                    i + 12,
+                    i + 13,
+                    i + 14,
+                    i + 15,
+                ];
 
-            if (
-                row.every((index) => squares[index].classList.contains("taken"))
-            ) {
-                score += 10;
+                if (
+                    row.every((index) =>
+                        squares[index].classList.contains("taken")
+                    )
+                ) {
+                    score += 10;
+                    scoreDisplay.innerHTML = score;
+                    row.forEach((index) => {
+                        squares[index].classList.remove("taken");
+                        squares[index].classList.remove("tetrmino");
+                        squares[index].style.backgroundColor = "";
+                    });
+                    const squaresRemoved = squares.splice(i, width);
+                    squares = squaresRemoved.concat(squares);
+                    squares.forEach((cell) => grid.appendChild(cell));
+                }
+            }
+        } else if (arg === "caterpillar") {
+            for (let i = 368; i < 384; i += width) {
+                const row = [
+                    i,
+                    i + 1,
+                    i + 2,
+                    i + 3,
+                    i + 4,
+                    i + 5,
+                    i + 6,
+                    i + 7,
+                    i + 8,
+                    i + 9,
+                    i + 10,
+                    i + 11,
+                    i + 12,
+                    i + 13,
+                    i + 14,
+                    i + 15,
+                ];
+                score -= 10;
                 scoreDisplay.innerHTML = score;
                 row.forEach((index) => {
                     squares[index].classList.remove("taken");
@@ -281,13 +330,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     squares[index].style.backgroundColor = "";
                 });
                 const squaresRemoved = squares.splice(i, width);
-                //console.log("squaresRemoved ", squaresRemoved);
                 squares = squaresRemoved.concat(squares);
                 squares.forEach((cell) => grid.appendChild(cell));
-            }
-
-            if (score >= 10) {
-                caterpillarBtn.classList.remove("hidden");
             }
         }
     }
